@@ -1,14 +1,29 @@
+<div align="center">
+
 # 📉 Customer Churn Prediction
 
-Predicting telecom customer churn with machine learning — deployed as an interactive, self-explaining Streamlit app.
+**Predicting telecom customer churn with machine learning — deployed as an interactive, explainable Streamlit dashboard.**
 
-[Overview](#-overview) • [App Features](#️-app-features) • [Key Insights](#-key-insights) • [Pipeline](#-pipeline) • [Results](#-model-results) • [Getting Started](#-getting-started) • [Author](#-author)
+[![Python](https://img.shields.io/badge/Python-3.10-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+[Overview](#-overview) •
+[App Features](#-app-features) •
+[Key Insights](#-key-insights) •
+[Pipeline](#-pipeline) •
+[Results](#-model-results) •
+[Getting Started](#-getting-started) •
+[Author](#-author)
+
+</div>
 
 ---
 
 ## 📖 Overview
 
-An end-to-end churn prediction pipeline on the Telco Customer Churn dataset — raw data to a deployed, interactive web app. Enter a customer's profile, get a churn risk score and the reasons behind it.
+An end-to-end churn prediction pipeline on the [Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn) dataset — from raw data to a deployed, interactive web app. Enter a customer's profile and get a churn risk score, along with the reasons behind it.
 
 - Cleans and encodes raw customer data (demographics, services, billing)
 - Trains and compares three classification models
@@ -18,16 +33,17 @@ An end-to-end churn prediction pipeline on the Telco Customer Churn dataset — 
 
 ## 🖥️ App Features
 
-- **Real-time prediction** — churn probability (0–100%) with an animated risk meter and severity pill (low / moderate / high)
-- **Primary risk factors** — top drivers behind each prediction as plain-language cards tagged `+ Risk` or `− Risk`
-- **Sample profiles** — one-click High / Low / Moderate presets, plus a reset button
-- **Customer snapshot** — summarized view of the inputs behind the current prediction
-- **Interpretable by design** — factor explanations come from the logistic regression coefficients, not a black box
-- **Polished UI** — staggered card animations, count-up risk score, hover transitions, `prefers-reduced-motion` support
+- **Real-time prediction** — churn probability (0–100%) with a color-coded risk meter and severity pill (low / moderate / high)
+- **Primary risk factors** — top drivers behind each prediction, computed live from the model's own logistic regression coefficients, tagged `+ Risk` or `− Risk`
+- **Sample profiles** — one-click High / Low / Moderate presets that pre-fill the whole form, plus a reset button
+- **Customer snapshot** — quick summary of the inputs behind the current prediction
+- **Interpretable by design** — factor explanations reflect the actual trained model, not hardcoded text
 
 ---
 
 ## 💡 Key Insights
+
+Exploratory analysis on ~7,000 customers surfaced a few clear churn drivers:
 
 | Signal | Observation |
 |---|---|
@@ -37,11 +53,12 @@ An end-to-end churn prediction pipeline on the Telco Customer Churn dataset — 
 | **Payment method** | Electronic check users churn more than automatic payment methods |
 | **Monthly charges** | Higher bills correlate with higher churn risk |
 
-These match the top features ranked by the model's own coefficients, and surface in the app as per-prediction risk cards.
+These match the top features ranked by the model's own coefficients, and surface live in the app as per-prediction risk factor cards.
 
 ---
 
 ## 🧩 Pipeline
+
 ```mermaid
 flowchart LR
     A[Raw CSV<br/>Telco-Customer-Churn.csv] --> B[Clean & Impute<br/>TotalCharges, drop ID]
@@ -54,22 +71,19 @@ flowchart LR
     H --> I[Streamlit App<br/>real-time explainable prediction]
 ```
 
-Reproducible two ways:
-
-- **`app/train_model.py`** — one-click script: cleans, trains Logistic Regression, prints metrics, saves all model artifacts (auto-downloads the dataset if missing)
-- **`notebooks/01_EDA_and_Preprocessing.ipynb`** — full EDA + three-model comparison behind the results table below
+All training and evaluation happens in `notebooks/01_EDA_and_Preprocessing.ipynb` — EDA, cleaning, encoding, scaling, and the three-model comparison behind the results table below. The last cell saves `churn_model.pkl`, `scaler.pkl`, and `model_columns.pkl` into `models/`, which `app/app.py` loads directly.
 
 ---
 
 ## 🏆 Model Results
 
 | Model | Precision (churn) | Recall (churn) | F1 (churn) | ROC-AUC |
-|---|---|---|---|---|
-| **Logistic Regression (selected)** | 0.65 | 0.55 | — | ~0.84 |
+|---|:---:|:---:|:---:|:---:|
+| **Logistic Regression (selected)** | 0.65 | 0.55 | — | **~0.84** |
 | Random Forest | 0.63 | 0.51 | 0.56 | ~0.83 |
 | XGBoost | 0.58 | 0.50 | 0.54 | ~0.82 |
 
-Logistic Regression was selected for deployment — matched or beat the ensemble models on ROC-AUC while staying fully interpretable.
+Logistic Regression was selected for deployment — it matched or beat the ensemble models on ROC-AUC while staying fully interpretable, which is what powers the app's live risk-factor explanations.
 
 ---
 
@@ -79,17 +93,18 @@ Logistic Regression was selected for deployment — matched or beat the ensemble
 Customer-Churn-Prediction/
 │
 ├── app/
-│   ├── app.py                          # Streamlit prediction dashboard
-│   ├── train_model.py                  # one-click training script (auto-downloads data)
-│   ├── data/
-│   │   └── Telco-Customer-Churn.csv    # raw dataset (auto-downloaded on first run)
-│   └── models/
-│       ├── churn_model.pkl             # trained Logistic Regression model
-│       ├── scaler.pkl                  # fitted StandardScaler
-│       └── model_columns.pkl           # training-time feature column order
+│   └── app.py                          # Streamlit prediction dashboard
+│
+├── data/
+│   └── Telco-Customer-Churn.csv        # raw dataset
+│
+├── models/
+│   ├── churn_model.pkl                 # trained Logistic Regression model
+│   ├── scaler.pkl                      # fitted StandardScaler
+│   └── model_columns.pkl               # training-time feature column order
 │
 ├── notebooks/
-│   └── 01_EDA_and_Preprocessing.ipynb  # EDA, cleaning, model comparison
+│   └── 01_EDA_and_Preprocessing.ipynb  # EDA, cleaning, training, evaluation
 │
 ├── requirements.txt
 ├── LICENSE
@@ -100,7 +115,7 @@ Customer-Churn-Prediction/
 
 ## 🛠️ Tech Stack
 
-Python · Pandas · NumPy · scikit-learn · XGBoost · Streamlit · Matplotlib · Seaborn · joblib
+`Python` · `Pandas` · `NumPy` · `scikit-learn` · `XGBoost` · `Streamlit` · `Matplotlib` · `Seaborn` · `joblib`
 
 ---
 
@@ -116,24 +131,18 @@ cd Customer-Churn-Prediction
 ```bash
 pip install -r requirements.txt
 ```
-> Requires Streamlit ≥ 1.29 (the dashboard uses bordered containers). `requirements.txt` pins this.
 
-### 3. Train the model (one command)
+### 3. Generate the model artifacts
+Run the notebook end to end — this creates `churn_model.pkl`, `scaler.pkl`, and `model_columns.pkl` in `models/`:
 ```bash
-python app/train_model.py
+jupyter nbconvert --to notebook --execute --inplace notebooks/01_EDA_and_Preprocessing.ipynb
 ```
-Downloads the dataset automatically (saved to `app/data/`), trains the model, prints accuracy / ROC-AUC, and generates the three `.pkl` artifacts in `app/models/`. You can also place `Telco-Customer-Churn.csv` in `app/data/` yourself.
 
 ### 4. Launch the app
 ```bash
 streamlit run app/app.py
 ```
 Fill in a customer's details (or click a sample profile) and hit **Predict churn**.
-
-### 5. (Optional) Re-run the full EDA / model comparison
-```bash
-jupyter nbconvert --to notebook --execute --inplace notebooks/01_EDA_and_Preprocessing.ipynb
-```
 
 ---
 
@@ -153,13 +162,16 @@ jupyter nbconvert --to notebook --execute --inplace notebooks/01_EDA_and_Preproc
 
 B.Tech — Artificial Intelligence & Data Science
 
-[GitHub](https://github.com/ibrahimkhan-data)
+[![GitHub](https://img.shields.io/badge/GitHub-ibrahimkhan--data-181717?logo=github&logoColor=white)](https://github.com/ibrahimkhan-data/)
 
-### Note on AI Assistance
-Core ideas, dataset choice, and direction were mine. An AI assistant helped with debugging, writing/refactoring parts of the code (notably the Streamlit dashboard and preprocessing alignment), and drafting this README.
+---
+
+## Note on AI Assistance
+
+This project was built as a learning exercise. Core ideas, dataset choice, and direction were mine, and an AI assistant was used for debugging, writing/refactoring parts of the code (notably the Streamlit dashboard and preprocessing alignment), and drafting this README.
 
 ---
 
 ## License
 
-MIT License — free to use, modify, and build on, with attribution.
+This project is licensed under the [MIT License](LICENSE) — free to use, modify, and build on, with attribution.
