@@ -42,7 +42,6 @@ These match the top features ranked by the model's own coefficients, and surface
 ---
 
 ## 🧩 Pipeline
-
 ```mermaid
 flowchart LR
     A[Raw CSV<br/>Telco-Customer-Churn.csv] --> B[Clean & Impute<br/>TotalCharges, drop ID]
@@ -151,6 +150,7 @@ jupyter nbconvert --to notebook --execute --inplace notebooks/01_EDA_and_Preproc
 ## 👤 Author
 
 **Khan Ibrahim**
+
 B.Tech — Artificial Intelligence & Data Science
 
 [GitHub](https://github.com/ibrahimkhan-data)
