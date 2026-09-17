@@ -44,9 +44,6 @@ These match the top features ranked by the model's own coefficients, and surface
 ## 🧩 Pipeline
 ```mermaid
 flowchart LR
-
-
-
     A[Raw CSV<br/>Telco-Customer-Churn.csv] --> B[Clean & Impute<br/>TotalCharges, drop ID]
     B --> C[One-Hot Encode<br/>categorical features]
     C --> D[Train / Test Split<br/>80 / 20, stratified]
